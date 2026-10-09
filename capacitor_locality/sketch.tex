@@ -1,0 +1,163 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+
+\title{Dielectric Insertion:\\Fields, Voltage, and Causality}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+Your cancellation argument is correct: for ideal infinite sheets at fixed free
+charge, inserting the dielectric does not change the electric field in the air
+gaps. However, \textbf{that field is not the entire electromagnetic field of the
+capacitor--battery system}. The apparent contradiction arises when an
+infinite-sheet \emph{electrostatic} result is used to rule out the fields needed
+for a \emph{time-dependent circuit response}.
+
+Saying ``the battery keeps the voltage constant'' gives the final equilibrium
+condition, but does not explain how the battery responds causally.
+
+\section{A voltage change does not require a field change at the plates}
+
+Let $\sigma$ be the free surface-charge density on the positive plate, $d$ the
+plate separation, $b$ the dielectric thickness, and $\kappa$ its relative
+permittivity. In the ideal planar geometry, at fixed charge,
+\[
+    E_{\mathrm{air}}=\frac{\sigma}{\varepsilon_0},
+    \qquad
+    E_{\mathrm{dielectric}}=\frac{\sigma}{\kappa\varepsilon_0}.
+\]
+The dielectric's two infinite, uniformly charged bound surfaces cancel each
+other's fields outside the slab, exactly as you argued. Nevertheless, the
+positive plate's potential relative to the negative plate is
+\begin{align*}
+    V
+    &=\int_{\text{positive plate}}^{\text{negative plate}}
+        \mathbf{E}\cdot d\boldsymbol{\ell} \\
+    &=E_{\mathrm{air}}(d-b)+E_{\mathrm{dielectric}}b \\
+    &=\frac{\sigma}{\varepsilon_0}
+        \left(d-b+\frac{b}{\kappa}\right).
+\end{align*}
+This is smaller than the original $\sigma d/\varepsilon_0$ because the field is
+smaller \emph{along part of the path between the plates}.
+
+There is no requirement for charges on the plates to experience a different
+local force just because that integral changes. A potential difference is not
+an additional local force that the charges must be ``notified'' about.
+
+For the disconnected capacitor in the textbook, that is the whole story: the
+voltage decreases, the free charge stays fixed, and no battery needs to respond.
+A connected battery requires a more complete description.
+
+\section{The battery responds to fields along its connection}
+
+In an actual capacitor--battery circuit, inserting and polarizing the dielectric
+involves moving bound charges and polarization currents. These, together with
+the responding charges on the conductors, produce a changing electromagnetic
+field.
+
+The disturbance propagates through the apparatus at a finite speed. It changes
+local electric fields along the leads and at the battery terminals, allowing
+current to flow.
+
+\textbf{The field driving current along a wire is its component along the wire.}
+Your cancellation calculation concerns the field normal to the plates in the
+ideal planar region. It does not establish that the field along the battery
+connection remains unchanged.
+
+Moreover, cancellation in an initial or final electrostatic state does not
+establish cancellation throughout the transient. During that transient,
+\[
+    \oint\mathbf{E}\cdot d\boldsymbol{\ell}
+    =-\frac{d\Phi_B}{dt},
+\]
+where $\Phi_B$ is the magnetic flux through the loop. The purely electrostatic
+picture is therefore not the complete description of the response.
+
+The battery does not remotely measure the dielectric and decide to compensate.
+Its charges respond locally to electromagnetic and electrochemical forces.
+
+\section{What changes if the plates are exactly infinite?}
+
+Take the idealization completely seriously:
+\begin{itemize}
+    \item The plates and dielectric are exactly infinite in the directions
+          parallel to the plates.
+    \item Everything is translationally symmetric in those directions.
+    \item The free surface-charge density is fixed.
+\end{itemize}
+Then the dielectric can indeed change the potential difference without changing
+the external electrostatic field. But \textbf{that mathematical model contains
+no localized battery connection whose response it can describe}.
+
+A finite wire or contact, a hole through a plate, or a battery placed between the
+plates breaks the symmetry. Alternatively, a connection going \emph{around}
+truly infinite plates has no finite length. One cannot assume exact planar
+symmetry while treating the geometry of a localized connection as irrelevant.
+
+A closed-loop argument makes the missing information explicit. Compare the
+\emph{fixed-charge electrostatic states before and after insertion} for a
+\emph{finite} capacitor. Draw a closed path through the capacitor gap and back
+around the outside. Write $\Delta\mathbf{E}$ for the difference between the two
+static fields. Since both states are electrostatic,
+\[
+    0=\oint\Delta\mathbf{E}\cdot d\boldsymbol{\ell}
+    =\underbrace{\int_{\mathrm{gap}}
+        \Delta\mathbf{E}\cdot d\boldsymbol{\ell}}_{\text{nonzero}}
+    +\int_{\mathrm{outside}}\Delta\mathbf{E}\cdot d\boldsymbol{\ell}.
+\]
+Consequently, \textbf{the field cannot remain unchanged everywhere along the
+outside return path}. Nonuniform fields near and beyond the edges provide the
+compensating contribution, even when the bulk air-gap field is essentially
+unchanged.
+
+For infinite plates, there is no finite outside return path of that kind. The
+apparent puzzle comes from removing the edges and connection geometry while
+still expecting the resulting model to explain communication with an external
+battery.
+
+The infinite-sheet approximation accurately describes the bulk electrostatics;
+it is not a complete model of the circuit's causal response.
+
+\section{Once the battery supplies charge, the air-gap field changes too}
+
+The statement ``the air-gap field is unchanged'' is conditional on
+\textbf{fixed $\sigma$}. For a battery maintaining the original voltage $V_0$,
+the final equilibrium in the parallel-plate approximation instead satisfies
+\[
+    V_0=\frac{\sigma_{\mathrm{final}}}{\varepsilon_0}
+        \left(d-b+\frac{b}{\kappa}\right).
+\]
+Thus,
+\[
+    \sigma_{\mathrm{final}}
+    =\frac{\varepsilon_0 V_0}{d-b+b/\kappa},
+    \qquad
+    E_{\mathrm{air,final}}
+    =\frac{V_0}{d-b+b/\kappa}.
+\]
+For $b>0$ and $\kappa>1$, this air-gap field is larger than the original $V_0/d$.
+These equations describe the final state; the electromagnetic transient is how
+a real circuit approaches it.
+
+\section*{Bottom line}
+
+You are right that causal influence must be electromagnetic. What fails is the
+inference that an unchanged bulk air-gap field at fixed charge means no field
+change can reach the battery.
+
+\textbf{An unchanged field in one region does not imply unchanged fields
+throughout the circuit, especially during insertion.} The ideal infinite-sheet
+calculation omits the connection geometry and transient fields needed to answer
+the communication question.
+
+\end{document}

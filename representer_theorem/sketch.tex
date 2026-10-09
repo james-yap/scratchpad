@@ -1,0 +1,154 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+
+\title{Geometric Interpretation of Rank-Nullity Theorem}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+\begin{document}
+
+\maketitle
+
+\section{Equations as a Transformation}
+In 2D space, the expression
+
+\begin{equation}
+    x + y
+\end{equation}
+
+can be thought of as a transformation that compresses 2D vectors into 1D points on a number line. In matrix form:
+
+\begin{equation}
+    \begin{bmatrix}
+        1 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        x \\
+        y
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    a
+    \end{bmatrix}
+\end{equation}
+
+where $a = x + y$ is the scalar that lies on the 1D line. So, the equation $x + y = 2$ when expressed in matrix form
+
+\begin{equation}
+    \begin{bmatrix}
+        1 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        x \\
+        y
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        2 \\
+    \end{bmatrix}
+\end{equation}
+
+is asking the question ``what vector $\begin{bmatrix} x \\ y \end{bmatrix}$, when applied to it the linear transformation $\begin{bmatrix} 1 & 1 \end{bmatrix}$, ends up at the 1D point $a=2$?''. Because the number of linearly independent equations is less than the dimension of the domain (equivalently,
+    \(\operatorname{rank}(\mathbf{A})<n\))\footnote{The \emph{rank} of a matrix \(\mathbf{A}\) is the number of linearly independent rows (or columns). For a linear system \(\mathbf{A}x=b\), this is the number of linearly independent equations.}, this system is \textbf{underdetermined}. There are infinite pairs of \(x\)s and \(y\)s satisfying \(y = - x + 2\) that fits this description. Geometrically, every vector terminating at a point on this line is compressed into the single point \(a=2\).
+
+\section{Subspaces}
+
+A subspace is a smaller vector space nestled inside a larger vector space. You can project a vector from a larger space onto a subspace. The three conditions for a subspace:
+
+\begin{enumerate}
+    \item \textbf{Contains the zero vector}: The origin is in the subspace.
+\item \textbf{Closed under addition}: If you pick any two vectors in the subspace and add them together, their sum must also stay inside the subspace.
+\item \textbf{Closed under scalar multiplication}: If you pick any vector in the subspace and scale it (multiply it by any number, including zero), the new stretched or shrunk vector must stay inside the subspace.
+\end{enumerate}
+
+\section{Null Space}
+
+The null space of a matrix \(\mathbf{A}\) is the set of all vectors \(\mathbf{x}\) such that \(\mathbf{A}\mathbf{x}=\mathbf{0}\). The null space is a subspace of the domain space. Geometrically, all vectors that end up crushed to the origin exists in the null space.
+
+\section{Recovering the full solution set}
+
+The null space helps us to ``uncrush'' \(a=2\) back to its \(\begin{bmatrix} x \\ y \end{bmatrix}\) form. Think of the null space as the direction vector, and a particular solution as the position vector. Since vectors in the null space map to 0 in the solution space, we can add the null solutions to a particular solution without changing the equality. Since the null solution has the degree of freedom of the original solution space, we can tweak the constant parameter of the null basis to recover the full original solution set.
+
+\section{Examples}
+
+Consider the equation \(x + y = 2\) which operates on the 2D space. The equivalent matrix form is
+
+\begin{equation}
+    \begin{bmatrix}
+        1 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        x \\
+        y
+    \end{bmatrix}
+    = 2
+\end{equation}
+
+with \(\operatorname{rank}(\mathbf{A}) = 1\). By the rank-nullity theorem, the null space has dimension \(n - \operatorname{rank}(\mathbf{A}) = 2 - 1 = 1\). \\
+
+Geometrically, the equation \(x + y = 2\) is a line in 2D space, the null space is another line, parallel to the first line, but offset to pass the origin. The null space is the line x + y = 0. The map \(\mathbf{A}\) sends every vector with tip on that line to the origin. An example vector in this null space is \(\begin{bmatrix}1 \\ -1\end{bmatrix}\) (or, in general, any \(x\) or \(y\) of the same value but opposite signs). Then, the complete null space can be described by \(c \begin{bmatrix}1 \\ -1\end{bmatrix}\). Then, if we discovered a particular solution, for example \(\begin{bmatrix}1 \\ 1\end{bmatrix}\) by arbitrarily setting the value of one variable and solving for the other (such is the nature of a 1 DOF system), we can reconstruct the original solution set like so:
+
+\begin{equation}
+    Ax = b
+\end{equation}
+
+\begin{equation}
+    x = x_\text{null} + x_\text{particular}
+\end{equation}
+
+\begin{equation}
+    x =
+    c \begin{bmatrix} 1 \\ -1\end{bmatrix}
+        + \begin{bmatrix} 1 \\ 1\end{bmatrix}
+\end{equation}
+
+where \(c\) is a knob we adjust to span the null space. \\
+
+In a 3D space, a system of 2 independent equations represent 2 distinct planes. The solution is then the line of intersction. The null space has dimension 1, which represents a parallel line that crosses the origin. A particular solution representing a position vector must also be discovered to provide the correct offset. If instead, only 1 equation is provided, then the solution is a plane in 3D space, and 2 direction vectors must be discovered to span the entire solution plane. In this case, the null space has dimension 2, meaning we will end up with 2 linearly independent basis vectors which form the null space, and 2 constants \(c_1\) and \(c_2\).
+
+\begin{equation}
+    x + y + z = 2
+\end{equation}
+
+\begin{equation}
+    \begin{bmatrix}
+        1 & 1 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        x \\ y \\ z
+    \end{bmatrix}
+    = 2
+\end{equation}
+
+\begin{align}
+    Ax &= 0 \\
+    \begin{bmatrix}
+        1 & 1 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        1 \\ 0 \\ -1
+    \end{bmatrix}
+    &= 0 \\
+    \begin{bmatrix}
+        1 & 1 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        1 \\ 1 \\ -2
+    \end{bmatrix}
+    &= 0
+\end{align}
+
+\begin{equation}
+    x = c_1 \begin{bmatrix} 1 \\ 0 \\ -1 \end{bmatrix}
+        + c_2 \begin{bmatrix} 1 \\ 1 \\ -2 \end{bmatrix}
+            + \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}
+\end{equation}
+
+\end{document}
