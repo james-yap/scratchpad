@@ -1,0 +1,57 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\pagestyle{empty}
+
+\title{Deriving the Chebyshev Distance Using Limits}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+For a vector $z=(z_1,\ldots,z_n)\in\mathbb{R}^n$, with $n\geq 1$, the
+$\ell_p$ norm is
+\[
+  \|z\|_p = \left(\sum_{i=1}^n |z_i|^p\right)^{1/p},
+  \qquad 1\leq p<\infty.
+\]
+We will show that its limit as $p\to\infty$ is the largest component magnitude.
+
+\paragraph{Simple proof.}
+Let $M=\max_{1\leq i\leq n}|z_i|$. At least one term in the sum equals
+$M^p$, and every term is at most $M^p$. Hence
+\[
+  M^p \leq \sum_{i=1}^n |z_i|^p \leq nM^p.
+\]
+Taking the $p$th root gives
+\[
+  M \leq \|z\|_p \leq n^{1/p}M.
+\]
+Since
+\[
+  \lim_{p\to\infty}n^{1/p}
+  =\lim_{p\to\infty}e^{(\log n)/p}=1,
+\]
+the squeeze theorem yields
+\[
+  \boxed{\lim_{p\to\infty}\|z\|_p
+  =\max_{1\leq i\leq n}|z_i|
+  =\|z\|_\infty.}
+\]
+This argument also covers $z=0$, when both bounds are zero.
+
+\paragraph{Chebyshev distance.}
+Applying the result to $z=x-y$ gives the $\ell_\infty$ (Chebyshev) distance:
+\[
+  \boxed{d_\infty(x,y)
+  =\lim_{p\to\infty}\left(\sum_{i=1}^n|x_i-y_i|^p\right)^{1/p}
+  =\max_{1\leq i\leq n}|x_i-y_i|.}
+\]
+
+\paragraph{Note.}
+The $\ell_\infty$ norm selects a component with maximum magnitude and returns
+that magnitude, not its sign or index. For distance, it selects the largest
+absolute coordinate difference. Ties do not affect the value.
+
+\end{document}

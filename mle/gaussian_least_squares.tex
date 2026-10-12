@@ -1,0 +1,149 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage[hmargin=0.9in,vmargin=0.75in]{geometry}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.4em}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\title{Why Gaussian Noise Leads to Least Squares}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-2em}
+
+\textbf{The short answer:} the Gaussian probability density contains a
+\emph{squared error} in its exponent. Independent observations give a
+\emph{product} of densities. Taking the logarithm turns that product into a
+\emph{sum}, so maximizing likelihood becomes minimizing a sum of squared errors.
+
+\section{Start with a model for the errors}
+
+Suppose we observe pairs $(x_i,y_i)$, for $i=1,\ldots,n$, and predict $y_i$ using
+$f_\theta(x_i)$, where $\theta$ denotes the parameters we want to fit. Assume
+\[
+    y_i=f_\theta(x_i)+\varepsilon_i,
+    \qquad \varepsilon_i\overset{\mathrm{iid}}{\sim}\mathcal{N}(0,\sigma^2).
+\]
+Here ``iid'' means independent and identically distributed: the errors are
+independent, have mean zero, and share the same variance $\sigma^2>0$.
+Treat the inputs $x_i$ as fixed and, for now, treat $\sigma^2$ as fixed too.
+The Gaussian probability density function (PDF) for one observation is
+\begin{equation}
+    p(y_i\mid x_i,\theta,\sigma^2)
+    =\frac{1}{\sqrt{2\pi\sigma^2}}
+      \exp\!\left[-\frac{\bigl(y_i-f_\theta(x_i)\bigr)^2}{2\sigma^2}\right].
+\end{equation}
+The \textbf{residual} is $r_i(\theta)=y_i-f_\theta(x_i)$: observed minus predicted.
+The square is already present in the Gaussian PDF; taking logs does not create it.
+
+\section{Multiply the densities, then take the logarithm}
+
+The \textbf{likelihood} is the joint density of the observed data, viewed as a
+function of the parameters. Independence lets us multiply the individual densities:
+\begin{align}
+    L(\theta)
+    &=\prod_{i=1}^{n}p(y_i\mid x_i,\theta,\sigma^2)\\
+    &=(2\pi\sigma^2)^{-n/2}
+      \exp\!\left[-\frac{1}{2\sigma^2}
+                    \sum_{i=1}^{n}r_i(\theta)^2\right].
+\end{align}
+For continuous data, this is a density, not the probability of observing an
+exact value (which is zero). Maximum likelihood compares these densities.
+
+Because $\log$ is strictly increasing, maximizing $L$ is equivalent to maximizing
+its log, $\ell(\theta)=\log L(\theta)$. Equivalently, minimize the negative log:
+\begin{equation}
+    -\ell(\theta)
+    =\underbrace{\frac{n}{2}\log(2\pi\sigma^2)}_{\text{constant with respect to }\theta}
+     +\underbrace{\frac{1}{2\sigma^2}}_{\text{positive constant}}
+      \underbrace{\sum_{i=1}^{n}\bigl(y_i-f_\theta(x_i)\bigr)^2}_{\displaystyle S(\theta):\ \text{sum of squared errors}}.
+\end{equation}
+Adding a constant or multiplying by a positive constant does not change the
+minimizer. Therefore,
+\begin{equation}
+    \boxed{\widehat\theta_{\mathrm{MLE}}
+    \in\argmax_\theta L(\theta)
+    =\argmin_\theta\sum_{i=1}^{n}\bigl(y_i-f_\theta(x_i)\bigr)^2.}
+\end{equation}
+This is \textbf{least squares}. Dividing the sum by $n$ gives mean squared error
+(MSE), with exactly the same minimizers.
+
+\newpage
+\section{A concrete example: estimating a constant mean}
+
+If $y_i\overset{\mathrm{iid}}{\sim}\mathcal{N}(\mu,\sigma^2)$, the prediction is simply
+$f_\mu(x_i)=\mu$. Least squares minimizes
+\[
+    S(\mu)=\sum_{i=1}^{n}(y_i-\mu)^2.
+\]
+Differentiate and set the derivative to zero:
+\[
+    \frac{dS}{d\mu}=2\sum_{i=1}^{n}(\mu-y_i)=0
+    \quad\Longrightarrow\quad
+    \boxed{\widehat\mu=\frac{1}{n}\sum_{i=1}^{n}y_i.}
+\]
+Since $d^2S/d\mu^2=2n>0$, this is the unique minimum. Thus the sample mean is
+also the Gaussian maximum-likelihood estimate of the population mean.
+For observations $1,2,3$, fitting $\mu=2$ gives $S=2$, whereas $\mu=1$ gives $S=5$.
+Their likelihood ratio is
+\[
+    \frac{L(2)}{L(1)}
+    =\exp\!\left(\frac{5-2}{2\sigma^2}\right)>1:
+\]
+the smaller squared error means the larger likelihood.
+For a line, replace $\mu$ by $a x_i+b$; the same derivation yields the usual
+linear-regression objective $\sum_i(y_i-a x_i-b)^2$.
+
+\section{What if the variance is unknown?}
+
+If we estimate a single shared variance as well, we must retain the terms
+involving $\sigma^2$. Writing $v=\sigma^2$, the negative log-likelihood is
+\[
+    J(\theta,v)=\frac{n}{2}\log(2\pi v)+\frac{S(\theta)}{2v}.
+\]
+For a fixed $\theta$ with $S(\theta)>0$, minimizing over $v>0$ gives
+\[
+    \frac{\partial J}{\partial v}
+    =\frac{n}{2v}-\frac{S(\theta)}{2v^2}=0
+    \quad\Longrightarrow\quad
+    \widehat v(\theta)=\frac{S(\theta)}{n}.
+\]
+Substituting back yields
+\[
+    J\bigl(\theta,\widehat v(\theta)\bigr)
+    =\frac{n}{2}\left[\log\!\left(2\pi\frac{S(\theta)}{n}\right)+1\right].
+\]
+This is increasing in $S(\theta)$, so minimizing it still gives least squares.
+When the minimum squared error is positive and attained,
+$\widehat\sigma^2_{\mathrm{MLE}}=S(\widehat\theta)/n$.
+The denominator here is $n$, not a degrees-of-freedom correction used for
+unbiased variance estimation. If a perfect fit gives $S=0$, the likelihood is
+unbounded as $\sigma^2\to0$; there is no finite joint MLE with positive variance.
+
+\section{Which assumptions make ordinary least squares appear?}
+
+\begin{itemize}
+    \item \textbf{Gaussian errors} supply the squared residual. Independent
+    Laplace errors with a fixed common scale instead give absolute-error loss,
+    $\sum_i |r_i|$.
+    \item \textbf{Independence} allows the likelihood to factor into a product,
+    so its log becomes a sum of individual contributions.
+    \item \textbf{Equal variance} makes every squared residual have the same
+    weight. Independent Gaussian errors with known unequal variances
+    $\sigma_i^2$ instead give weighted least squares,
+    $\sum_i r_i^2/\sigma_i^2$.
+\end{itemize}
+
+\textbf{Takeaway:} least squares can be used without assuming Gaussian noise,
+but independent Gaussian errors with a common variance give it a precise
+maximum-likelihood interpretation.
+
+\end{document}
